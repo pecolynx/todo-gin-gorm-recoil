@@ -1,7 +1,8 @@
-import React, { useCallback } from "react";
-import type { NoteType } from "../types/NoteType";
-import { notesAtom } from "../atoms/notesAtom";
+import type React from "react";
+import { useCallback } from "react";
 import { useRecoilState } from "recoil";
+import { notesAtom } from "../atoms/notesAtom";
+import type { NoteType } from "../types/NoteType";
 import { replaceItemAtIndex } from "../utils/replaceItemAtIndex";
 
 type Props = {
@@ -32,7 +33,7 @@ export const NoteItem: React.FC<Props> = ({ item }) => {
       setNotes(newList);
     },
 
-    [notes, setNotes]
+    [notes, setNotes],
   );
 
   /**

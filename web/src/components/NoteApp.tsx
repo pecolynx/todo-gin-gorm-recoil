@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
+import type React from "react";
+import { useCallback } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { notesAtom } from "../atoms/notesAtom";
-import { NoteStats } from "./NoteStats";
 import { NoteItem } from "./NoteItem";
+import { NoteStats } from "./NoteStats";
 
 /**
  * メモ帳のアプリケーションです。
@@ -21,7 +22,7 @@ export const NoteApp: React.FC = () => {
       [
         ...state,
         { id: String(state.length + 1), value: "", isComplete: false },
-      ].sort((a, b) => a.id.localeCompare(b.id))
+      ].sort((a, b) => a.id.localeCompare(b.id)),
     );
   }, [setNotepad]);
 

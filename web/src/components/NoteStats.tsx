@@ -1,7 +1,6 @@
-
+import type React from "react";
 import { useRecoilValue } from "recoil";
 import { notesSelector } from "../atoms/notesSelector";
-import React from "react";
 
 /**
  * メモ帳の統計情報を表示するコンポーネントです。

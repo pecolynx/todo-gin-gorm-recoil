@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/pkg/errors"
 
 	"github.com/gin-gonic/gin"
@@ -57,10 +58,22 @@ func run(ctx context.Context,
 		})
 
 		api := router.Group("api")
+		api.Use(cors.New(cors.Config{
+			AllowAllOrigins: true,
+			AllowMethods:    []string{"*"},
+			AllowHeaders:    []string{"*"},
+		}))
 		api.GET("ping", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"message": "pong",
 			})
+		})
+		api.GET("todo", func(c *gin.Context) {
+			c.JSON(http.StatusOK,
+				[]gin.H{
+					{"id": 1, "text": "todo1", "isComplete": false},
+				},
+			)
 		})
 
 		httpServer := http.Server{
