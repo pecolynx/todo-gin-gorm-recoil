@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+// import { useCallback } from "react";
 import type { ChangeEventHandler } from "react";
-import { useRecoilState } from "recoil";
-import { todoListState } from "./todoListState";
+// import { useRecoilState } from "recoil";
+// import { todoListState } from "./todoListState";
 import type { TodoItemType } from "./todoListState";
 
 type Props = {
@@ -10,25 +10,25 @@ type Props = {
   updateTodo: (id: number, text: string, isComplete: boolean) => void;
 };
 
-const replaceItemAtIndex = (
-  arr: TodoItemType[],
-  index: number,
-  newValue: TodoItemType,
-) => {
-  return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-};
+// const replaceItemAtIndex = (
+//   arr: TodoItemType[],
+//   index: number,
+//   newValue: TodoItemType,
+// ) => {
+//   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+// };
 
-const removeItemAtIndex = (arr: TodoItemType[], index: number) => {
-  return [...arr.slice(0, index), ...arr.slice(index + 1)];
-};
+// const removeItemAtIndex = (arr: TodoItemType[], index: number) => {
+//   return [...arr.slice(0, index), ...arr.slice(index + 1)];
+// };
 
 export const TodoItem = ({
   item,
   deleteTodo,
   updateTodo,
 }: Props): JSX.Element => {
-  const [todoList, setTodoList] = useRecoilState(todoListState);
-  const index = todoList.findIndex((listItem) => listItem === item);
+  // const [todoList, setTodoList] = useRecoilState(todoListState);
+  // const index = todoList.findIndex((listItem) => listItem === item);
 
   // const editItemText: ChangeEventHandler<HTMLInputElement> = useCallback(
   //   ({ target: { value } }) => {

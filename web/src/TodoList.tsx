@@ -1,6 +1,6 @@
 import { TodoItem } from "./TodoItem";
 import { TodoItemCreator } from "./TodoItemCreator";
-import { updateTodoAPI } from "./api";
+// import { updateTodoAPI } from "./api";
 import { todoSelectors } from "./todoListState";
 
 interface Props {

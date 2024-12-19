@@ -1,0 +1,24 @@
+---
+version: "3"
+
+tasks:
+  hello:
+    cmds:
+      - echo 'Hello World from Task!'
+    silent: true
+  web-build:
+    cmds:
+      - |
+        pushd web
+        npm run build
+        popd
+      - |
+        pushd app
+        rm -rf web_dist/*
+        popd
+      - cp -r web/dist/* app/web_dist/
+  web-format:
+    dir: web
+    cmds:
+      - npm run check
+      - npm run format

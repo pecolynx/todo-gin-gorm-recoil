@@ -4,10 +4,10 @@ import type { ChangeEventHandler } from "react";
 import { useCreateDispatcher } from "./dispatcher";
 
 // utility for creating unique Id
-let id = 0;
-const getId = () => {
-  return id++;
-};
+// let id = 0;
+// const getId = () => {
+//   return id++;
+// };
 
 export const TodoItemCreator = (): JSX.Element => {
   const [inputValue, setInputValue] = useState("");
