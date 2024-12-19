@@ -83,6 +83,28 @@ func run(ctx context.Context, db *gorm.DB) int {
 			}
 			c.JSON(http.StatusOK, todos)
 		})
+		api.GET("todo/:id", func(c *gin.Context) {
+			id, err := strconv.Atoi(c.Param("id"))
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+			todo := Todo{}
+			if result := db.First(&todo, id); result.Error != nil {
+				if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+					c.Status(http.StatusNotFound)
+					return
+				}
+
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": result.Error.Error(),
+				})
+				return
+			}
+			c.JSON(http.StatusOK, todo)
+		})
 		api.POST("todo", func(c *gin.Context) {
 			param := Todo{}
 			if err := c.ShouldBindJSON(&param); err != nil {
@@ -99,7 +121,7 @@ func run(ctx context.Context, db *gorm.DB) int {
 					"error": result.Error.Error(),
 				})
 			}
-			c.JSON(http.StatusOK, todo)
+			c.JSON(http.StatusCreated, todo)
 		})
 
 		api.PUT("todo/:id", func(c *gin.Context) {
@@ -137,7 +159,7 @@ func run(ctx context.Context, db *gorm.DB) int {
 					"error": result.Error.Error(),
 				})
 			}
-			c.Status(http.StatusOK)
+			c.Status(http.StatusNoContent)
 		})
 
 		httpServer := http.Server{
