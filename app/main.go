@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -99,6 +100,44 @@ func run(ctx context.Context, db *gorm.DB) int {
 				})
 			}
 			c.JSON(http.StatusOK, todo)
+		})
+
+		api.PUT("todo/:id", func(c *gin.Context) {
+			id, err := strconv.Atoi(c.Param("id"))
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+			param := Todo{}
+			if err := c.ShouldBindJSON(&param); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": err.Error(),
+				})
+			}
+			todo := Todo{
+				GormModel:  GormModel{ID: uint(id)},
+				Text:       param.Text,
+				IsComplete: param.IsComplete,
+			}
+			result := db.Model(&todo).Select("Text", "IsComplete").Updates(&todo)
+			if result.Error != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": result.Error.Error(),
+				})
+			}
+			c.JSON(http.StatusOK, todo)
+		})
+		api.DELETE("todo/:id", func(c *gin.Context) {
+			id := c.Param("id")
+			result := db.Delete(&Todo{}, id)
+			if result.Error != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": result.Error.Error(),
+				})
+			}
+			c.Status(http.StatusOK)
 		})
 
 		httpServer := http.Server{

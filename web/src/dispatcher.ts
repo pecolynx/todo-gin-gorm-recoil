@@ -28,8 +28,8 @@ export const useCreateDispatcher = () => {
 
   const updateTodo = useRecoilCallback(
     ({ set }) =>
-      async (id: number, text: string) => {
-        const updatedTodo = await updateTodoAPI(id, text);
+      async (id: number, text: string, isComplete: boolean) => {
+        const updatedTodo = await updateTodoAPI(id, text, isComplete);
         set(todoListState, (oldTodos) =>
           oldTodos.map((todo) => (todo.id === id ? updatedTodo : todo)),
         );

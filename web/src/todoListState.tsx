@@ -7,11 +7,6 @@ export type TodoItemType = {
   isComplete: boolean;
 };
 
-// export const todoListState = atom<TodoItemType[]>({
-// 	key: "todoListState",
-// 	default: [],
-// });
-
 export const todoListState = atom<TodoItemType[]>({
   key: "todoListState",
   default: selector({

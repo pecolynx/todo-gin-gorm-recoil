@@ -1,7 +1,5 @@
 import { useCallback, useState } from "react";
 import type { ChangeEventHandler } from "react";
-import { useSetRecoilState } from "recoil";
-import { todoListState } from "./todoListState";
 
 import { useCreateDispatcher } from "./dispatcher";
 
@@ -13,20 +11,7 @@ const getId = () => {
 
 export const TodoItemCreator = (): JSX.Element => {
   const [inputValue, setInputValue] = useState("");
-  const setTodoList = useSetRecoilState(todoListState);
   const dispatcher = useCreateDispatcher();
-
-  //   const addItem = useCallback(() => {
-  //     setTodoList((oldTodoList) => [
-  //       ...oldTodoList,
-  //       {
-  //         id: getId(),
-  //         text: inputValue,
-  //         isComplete: false,
-  //       },
-  //     ]);
-  //     setInputValue("");
-  //   }, [inputValue, setTodoList]);
 
   const addItem = () => {
     dispatcher.addTodo(inputValue, () => {

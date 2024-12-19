@@ -17,21 +17,21 @@ export const addTodoAPI = async (text: string): Promise<TodoItemType> => {
 };
 
 export const deleteTodoAPI = async (id: number): Promise<void> => {
-  return await fetch("http://localhost:8080/api/todo", {
+  return await fetch(`http://localhost:8080/api/todo/${id}`, {
     method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
-  }).then((res) => res.json());
+  }).then(() => {});
 };
 
-export const updateTodoAPI = async (id: number, text: string) => {
-  return await fetch("http://localhost:8080/api/todo", {
+export const updateTodoAPI = async (
+  id: number,
+  text: string,
+  isComplete: boolean,
+) => {
+  return await fetch(`http://localhost:8080/api/todo/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id, text }),
+    body: JSON.stringify({ text, isComplete }),
   }).then((res) => res.json());
 };

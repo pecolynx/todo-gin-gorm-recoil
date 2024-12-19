@@ -1,11 +1,14 @@
-import { useRecoilValue } from "recoil";
 import { TodoItem } from "./TodoItem";
 import { TodoItemCreator } from "./TodoItemCreator";
-// import { todoListState } from "./todoListState";
+import { updateTodoAPI } from "./api";
 import { todoSelectors } from "./todoListState";
 
-export const TodoList = (): JSX.Element => {
-  //   const todoList = useRecoilValue(todoListState);
+interface Props {
+  deleteTodo: (id: number) => void;
+  updateTodo: (id: number, text: string, isComplete: boolean) => void;
+}
+
+export const TodoList = ({ deleteTodo, updateTodo }: Props): JSX.Element => {
   const todoList = todoSelectors.useGetTodoList();
 
   console.log(todoList);
@@ -13,7 +16,12 @@ export const TodoList = (): JSX.Element => {
     <>
       <TodoItemCreator />
       {todoList.map((todoItem) => (
-        <TodoItem key={todoItem.id} item={todoItem} />
+        <TodoItem
+          key={todoItem.id}
+          item={todoItem}
+          deleteTodo={deleteTodo}
+          updateTodo={updateTodo}
+        />
       ))}
     </>
   );
