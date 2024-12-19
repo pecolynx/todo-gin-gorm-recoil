@@ -117,7 +117,7 @@ func run(ctx context.Context, db *gorm.DB) int {
 				})
 			}
 			todo := Todo{
-				GormModel:  GormModel{ID: uint(id)},
+				ID:         uint(id),
 				Text:       param.Text,
 				IsComplete: param.IsComplete,
 			}
