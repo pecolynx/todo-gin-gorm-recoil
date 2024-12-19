@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
-	"github.com/pkg/errors"
-
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
+	"gorm.io/gorm"
 )
 
 //go:embed web_dist
@@ -23,23 +23,31 @@ var web embed.FS
 func main() {
 	ctx := context.Background()
 	fmt.Println("Hello World")
-	run(ctx)
+	db, err := OpenMySQL("user", "password", "localhost", 3306, "todo", slog.Default())
+	if err != nil {
+		panic(err)
+	}
+
+	if err := db.AutoMigrate(&Todo{}); err != nil {
+		panic(err)
+	}
+	run(ctx, db)
 }
 
-func run(ctx context.Context,
-
-// cfg *config.Config, db *gorm.DB
-) int {
+func run(ctx context.Context, db *gorm.DB) int {
 	logger := slog.Default()
 	var eg *errgroup.Group
 	eg, ctx = errgroup.WithContext(ctx)
 
-	// if !cfg.Debug.Gin {
-	// 	gin.SetMode(gin.ReleaseMode)
-	// }
-
 	eg.Go(func() error {
 		router := gin.New()
+		router.Use(cors.New(cors.Config{
+			AllowAllOrigins: true,
+			AllowMethods:    []string{"*"},
+			AllowHeaders:    []string{"*"},
+		}))
+
+		// gin.SetMode(gin.ReleaseMode)
 
 		viteStaticFS, err := fs.Sub(web, "web_dist")
 		if err != nil {
@@ -58,22 +66,39 @@ func run(ctx context.Context,
 		})
 
 		api := router.Group("api")
-		api.Use(cors.New(cors.Config{
-			AllowAllOrigins: true,
-			AllowMethods:    []string{"*"},
-			AllowHeaders:    []string{"*"},
-		}))
+
 		api.GET("ping", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"message": "pong",
 			})
 		})
 		api.GET("todo", func(c *gin.Context) {
-			c.JSON(http.StatusOK,
-				[]gin.H{
-					{"id": 1, "text": "todo1", "isComplete": false},
-				},
-			)
+			todos := []Todo{}
+			if result := db.Find(&todos); result.Error != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": result.Error.Error(),
+				})
+				return
+			}
+			c.JSON(http.StatusOK, todos)
+		})
+		api.POST("todo", func(c *gin.Context) {
+			param := Todo{}
+			if err := c.ShouldBindJSON(&param); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": err.Error(),
+				})
+			}
+			todo := Todo{
+				Text: param.Text,
+			}
+			result := db.Create(&todo)
+			if result.Error != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": result.Error.Error(),
+				})
+			}
+			c.JSON(http.StatusOK, todo)
 		})
 
 		httpServer := http.Server{

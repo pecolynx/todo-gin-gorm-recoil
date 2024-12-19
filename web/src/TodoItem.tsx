@@ -56,7 +56,9 @@ export const TodoItem = ({ item }: Props): JSX.Element => {
         checked={item.isComplete}
         onChange={toggleItemCompletion}
       />
-      <button onClick={deleteItem}>X</button>
+      <button type="button" onClick={deleteItem}>
+        X
+      </button>
     </div>
   );
 };
