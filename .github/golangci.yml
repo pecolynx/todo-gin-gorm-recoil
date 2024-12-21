@@ -1,0 +1,50 @@
+---
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - bodyclose
+    - errorlint
+    - exhaustive
+    - forbidigo
+    - forcetypeassert
+    - gocognit
+    - gocyclo
+    - gofmt
+    - goimports
+    - gosec
+    - noctx
+    - testpackage
+    - thelper
+    - unconvert
+    - whitespace
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+
+  staticcheck:
+    # https://staticcheck.io/docs/options#checks
+    checks: [all]
+
+  gocognit:
+    min-complexity: 20
+
+  forbidigo:
+    forbid:
+      - ^fmt\.Print.*$
+
+  gosec:
+    excludes:
+      - G115
+
+run:
+  go: "1.23"
+  build-tags:
+    - small
+    - medium
+    - large
